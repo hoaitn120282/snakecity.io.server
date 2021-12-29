@@ -1,0 +1,97 @@
+{
+  "name": "snake-city",
+  "version": "1.0.0",
+  "description": "Project for node js which uses express and sequalize orm for database management.",
+  "author": "Henry Tran",
+  "main": "src/index.js",
+  "private": false,
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.9.3",
+    "npm": ">=5.5.1"
+  },
+  "scripts": {
+    "commitmsg": "commitlint -e $GIT_PARAMS",
+    "db:migrate": "sequelize db:migrate",
+    "dev": "cross-env NODE_ENV=development DEBUG=node-server:* nodemon src",
+    "lint": "esw src --color",
+    "lint:watch": "npm run lint -- --watch",
+    "precommit": "npm run lint",
+    "predev": "cross-env NODE_ENV=development npm run db:migrate",
+    "prestart": "npm run db:migrate",
+    "start": "node src",
+    "start:debug": "cross-env DEBUG=node-server:* npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "express",
+    "node",
+    "node.js",
+    "MySQL",
+    "Sequelize",
+    "starter",
+    "starter code",
+    "es6",
+    "es7",
+    "mocha",
+    "REST",
+    "API",
+    "REST API",
+    "boilerplate"
+  ],
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "bluebird": "3.7.2",
+    "body-parser": "1.19.0",
+    "compression": "1.7.4",
+    "cookie-parser": "1.4.5",
+    "cors": "2.8.5",
+    "cors-express": "0.2.2",
+    "debug": "4.2.0",
+    "dotenv": "8.2.0",
+    "eth-sig-util": "3.0.1",
+    "ethereumjs-util": "7.1.3",
+    "express": "4.17.1",
+    "express-jwt": "6.0.0",
+    "express-validation": "3.0.6",
+    "helmet": "4.1.1",
+    "http-status": "1.4.2",
+    "joi": "17.2.1",
+    "jsonwebtoken": "8.5.1",
+    "lodash": "4.17.20",
+    "metamask-login-front-logic": "1.0.18",
+    "method-override": "3.0.0",
+    "morgan": "1.10.0",
+    "mysql2": "2.2.5",
+    "pg": "8.7.1",
+    "pg-hstore": "2.3.4",
+    "sequelize": "6.3.5"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "11.0.0",
+    "@commitlint/config-conventional": "11.0.0",
+    "cross-env": "7.0.2",
+    "eslint": "7.10.0",
+    "eslint-config-airbnb-base": "14.2.0",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-watch": "7.0.0",
+    "husky": "4.3.0",
+    "lint-staged": "10.4.0",
+    "nodemon": "2.0.4",
+    "sequelize-cli": "6.2.0"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS",
+      "pre-commit": "lint-staged"
+    }
+  }
+}
