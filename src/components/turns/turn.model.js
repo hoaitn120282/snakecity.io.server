@@ -72,7 +72,11 @@ Reward.list = function list({ skip = 0, limit = 50 } = {}) {
 Reward.getBywalletID = function getBywalletID(walletID) {
   return this.findAll({
     where: {
-      walletID: walletID
+      walletID: walletID,
+      createdAt: {
+        $gte: new Date(new Date() - 24 * 60 * 60 * 1000),
+        $lte: new Date(),
+      },
     }
   });
 };

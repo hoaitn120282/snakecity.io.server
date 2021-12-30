@@ -1,3 +1,4 @@
+const { isEmpty } = require('lodash');
 const Model = require('./turn.model');
 
 /**
@@ -5,9 +6,18 @@ const Model = require('./turn.model');
  */
 function load(req, res, next, walletID) {
   return Model.getBywalletID(walletID)
-    .then((Model) => {
-      req.Model = Model; // eslint-disable-line no-param-reassign
-      return res.json(req.Model);
+    .then((model) => {
+      if (isEmpty(model)) {
+        const obj = new Model();
+        obj.walletID = walletID;
+        obj.turnNumber = 0;
+        obj.turnLimit = 5;
+        obj.save();
+        req.model = obj;
+      } else {
+        return next();
+      }
+      return res.json(req.model);
     })
     .catch((e) => next(e));
 }
@@ -16,8 +26,22 @@ function load(req, res, next, walletID) {
  * Get Model
  * @returns {Model}
  */
-function get(req, res) {
-  return res.json(req.Model.safeModel());
+function get(req, res, next) {
+  // res.send({ err: 'here we are' });
+  const walletID = req.params.walletID;
+  return Model.getBywalletID(walletID)
+    .then((model) => {
+      if (isEmpty(model)) {
+        const obj = new Model();
+        obj.walletID = walletID;
+        obj.turnNumber = 0;
+        obj.turnLimit = 5;
+        obj.save();
+        res.json(obj);
+      }
+      res.json(model);
+    })
+    .catch((e) => next(e));
 }
 
 /**
@@ -26,7 +50,7 @@ function get(req, res) {
  */
 function getObject(req, res, next) {
   return Model.get(res.locals.session.id)
-    .then((Model) => res.json(Model.safeModel()))
+    .then((model) => res.json(model.safeModel()))
     .catch((e) => next(e));
 }
 /**
@@ -49,15 +73,31 @@ function create(req, res, next) {
  * @property {integer} req.body.turnLimit .
  * @returns {Model}
  */
+// createdAt: {
+//   $between: [ new Date(), new Date(new Date() - 24 * 60 * 60 * 1000) ]
+// },
+// walletID: walletID,
 function update(req, res, next) {
-  const { Model } = req;
-  Model.walletID = req.body.walletID;
-  Model.turnNumber = req.body.turnNumber;
-  Model.turnLimit = req.body.turnLimit;
-
-  return Model.save()
-    .then((savedModel) => res.json(savedModel.safeModel()))
-    .catch((e) => next(e));
+  const walletID = req.body.walletID;
+  //Set datetime
+  Model.findAll({
+    where: {
+      createdAt: {
+        $gte: new Date(new Date() - 24 * 60 * 60 * 1000),
+        $lte: new Date(),
+      },
+      walletID: walletID,
+    },
+  }).then((turn) => {
+    if (!isEmpty(turn)) {
+      const model = turn[ 0 ];
+      model.turnNumber = req.body.turnNumber;
+      model.save();
+      res.json(model.safeModel());
+    } else {
+      res.json({ err: 'record is not exist!' });
+    }
+  }).catch((e) => next(e));
 }
 
 /**
@@ -91,5 +131,5 @@ module.exports = {
   update,
   list,
   destroy,
-  create
+  create,
 };

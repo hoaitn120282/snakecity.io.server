@@ -33,10 +33,11 @@ router.route('/')
 router.route('/:walletID')
   .get(modelCtrl.get)
 
-  .put(validate(paramValidation.updateModel), modelCtrl.update)
-
   .delete(modelCtrl.destroy);
 
-router.param('walletID', modelCtrl.load);
+router.route('/:walletID')
+  .put(validate(paramValidation.updateModel), modelCtrl.update);
+
+router.param('id', modelCtrl.load);
 
 module.exports = router;
