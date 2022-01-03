@@ -5,7 +5,8 @@ const Reward = require('../reward/reward.model');
  * Load Model and append to req.
  */
 function load(req, res, next, walletID) {
-  return Model.getBywalletID(walletID)
+  const { limit = 50, skip = 0 } = req.query;
+  return Model.getBywalletID(walletID, { limit, skip })
     .then((model) => {
       req.model = model;// eslint-disable-line no-param-reassign
       return res.json(req.model);

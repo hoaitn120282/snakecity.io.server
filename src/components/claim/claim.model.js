@@ -77,11 +77,14 @@ Reward.list = function list({ skip = 0, limit = 50 } = {}) {
   });
 };
 
-Reward.getBywalletID = function getBywalletID(walletID) {
+Reward.getBywalletID = function getBywalletID(walletID, { skip = 0, limit = 50 } = {}) {
   return this.findAll({
     where: {
       walletID: walletID,
     },
+    limit,
+    offset: skip,
+    order: [[ "createdAt", "DESC" ]],
   });
 };
 

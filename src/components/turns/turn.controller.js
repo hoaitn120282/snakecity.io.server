@@ -27,7 +27,6 @@ function load(req, res, next, walletID) {
  * @returns {Model}
  */
 function get(req, res, next) {
-  // res.send({ err: 'here we are' });
   const walletID = req.params.walletID;
   return Model.getBywalletID(walletID)
     .then((model) => {
